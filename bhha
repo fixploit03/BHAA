@@ -25,31 +25,32 @@ function keluar(){
 	exit 0
 }
 
-function aktifkan_bhha(){
+function aktifkan_bhaa(){
+
+	status_aktif=()
+
 	echo "[*] Mengaktifkan modul 'auth_basic'..."
 	sleep 3
-	sudo a2enmod auth_basic
+	sudo a2enmod auth_basic &> /dev/null
 	if [[ $? -ne 0 ]]; then
-		echo ""
 		echo "[-] Modul 'auth_basic' gagal diaktifkan."
 		tekan_enter
 		main
 	else
-		echo ""
 		echo "[+] Modul 'auth_basic' berhasil diaktifkan."
+		status_aktif+=("Berhasil")
 	fi
 
 	echo "[*] Merestart layanan 'Apache2'..."
 	sleep 3
 	sudo systemctl restart apache2
 	if [[ $? -ne 0 ]]; then
-		echo ""
 		echo "[-] Layanan 'Apacahe2' gagal direstart."
 		tekan_enter
 		main
 	else
-		echo ""
 		echo "[+] Layanan 'Apache2' berhasil direstart."
+		status_aktif+=("Berhasil")
 	fi
 
 	echo "[*] Menyalin file '000-default.conf' ke '/etc/apache2/sites-enabled'..."
@@ -58,31 +59,13 @@ function aktifkan_bhha(){
 	cp 000-default.conf /etc/apache2/sites-enabled/
 
 	if [[ $? -ne 0 ]]; then
-			echo ""
 	        echo "[-] File '000-default.conf' gagal disalin ke /etc/apache2/sites-enabled'."
 	        tekan_enter
-			main
+		main
 	else
-		echo ""
 		echo "[+] File '000-default.conf' berhasil disalin ke /etc/apache2/sites-enabled'."
+		status_aktif+=("Berhasil")
 	fi
-
-
-	echo "[*] Merestart layanan Apache2..."
-	sleep 3
-
-	sudo systemctl restart apache2
-
-	if [[ $? -ne 0 ]]; then
-			echo ""
-	        echo "[-] Layanan Apache2 gagal direstart."
-	        tekan_enter
-			main
-	else
-		echo ""
-		echo "[+] Layanan Apache2 berhasil direstart."
-	fi
-
 
 	echo "[*] Menyalin file 'apache2.conf' ke '/etc/apache2'..."
 	sleep 3
@@ -90,16 +73,13 @@ function aktifkan_bhha(){
 	sudo cp apache2.conf /etc/apache2/
 
 	if [[ $? -ne 0 ]]; then
-			echo ""
 	        echo "[-] File 'apache2.conf' gagal disalin ke /etc/apache2'."
 	        tekan_enter
-			main
+		main
 	else
-		echo ""
 		echo "[+] File 'apache2.conf' berhasil disalin ke '/etc/apache2'."
+		status_aktif+=("Berhasil")
 	fi
-
-
 
 	echo "[*] Menyalin file '.htaccess' ke '/var/www/html'..."
 	sleep 3
@@ -107,13 +87,12 @@ function aktifkan_bhha(){
 	sudo cp .htaccess /var/www/html/
 
 	if [[ $? -ne 0 ]]; then
-			echo ""
 	        echo "[-] File '.htaccess' gagal disalin ke /var/www/html'."
 	        tekan_enter
-			main
+		main
 	else
-		echo ""
 		echo "[+] File '.htaccess' berhasil disalin ke '/var/www/html'."
+		status_aktif+=("Berhasil")
 	fi
 
 
@@ -122,17 +101,24 @@ function aktifkan_bhha(){
 	sudo systemctl restart apache2
 
 	if [[ $? -ne 0 ]]; then
-			echo ""
 	        echo "[-] Layanan Apache2 gagal direstart."
 	        tekan_enter
-			main
+		main
 	else
-		echo ""
 		echo "[+] Layanan Apache2 berhasil direstart."
+		status_aktif+=("Berhasil")
+	fi
+
+
+	if [[ "${#status_aktif[@]}" -eq 6 ]]; then
+		echo "[+] Bhaa berhasil dikatifkan."
+		tekan_enter
+		main
+	else
+		echo "[-] Bhaa gagal dinonaktifkan."
 		tekan_enter
 		main
 	fi
-
 }
 
 # Fungsi untuk memasukkan username
@@ -290,32 +276,73 @@ function hapus_user(){
 	done
 }
 
-function nonaktifkan_bhha(){
+function nonaktifkan_bhaa(){
+
+	status_nonaktif=()
+
 	echo "[*] Menonaktifkan layanan 'auth_basic'..."
-	echo ""
 	sleep 3
-	a2dismod auth_basic
+	a2dismod auth_basic -f &> /dev/null
 	if [[ $? -ne 0 ]]; then
-		echo ""
 		echo "[-] Layanan 'auth_basic' gagal dinonaktifkan."
 		tekan_enter
 		main
 	else
-		echo ""
 		echo "[+] Layanan 'auth_basic' berhasil dinonaktifkan."
+		status_nonaktif+=("Berhasil")
 	fi
 	echo "[*] Merestart layanan Apache2..."
-	echo ""
 	sleep 3
 	systemctl restart apache2
 	if [[ $? -ne 0 ]]; then
-		echo ""
 		echo "[-] Layanan 'Apache2' gagal direstart."
 		tekan_enter
 		main
 	else
-		echo ""
 		echo "[+] Layanan 'Apache2' berhasil direstart "
+		status_nonaktif+=("Berhasil")
+	fi
+	echo "[*] Menyalin file 'disable-000-default.conf' ke '/etc/apache2/sites-enabled/000-default.conf'..."
+	sleep 3
+	cp disable-000-default.conf /etc/apache2/sites-enabled/000-default.conf
+	if [[ $? -ne 0 ]]; then
+		echo "File 'disable-000-default.conf' gagal disalin ke '/etc/apache2/sites-enabled/000-default.conf'."
+		tekan_enter
+		main
+	else
+		echo "[+] File 'disable-000-default.conf' berhasil disalin ke '/etc/apache2/sites-enabled/000-default.conf'."
+		status_nonaktif+=("Berhasil")
+	fi
+
+	echo "[*] Menyalin file 'disable-htaccess' ke '/var/www/html/.htaccess'..."
+	sleep 3
+	cp disable-htaccess /var/www/html/.htaccess
+	if [[ $? -ne 0 ]]; then
+		echo "[-] File 'disable-htaccess' gagal disalin ke '/var/www/html/.htaccess'."
+		tekan_enter
+		main
+	else
+		echo "[+] File 'disable-htaccess' berhasil disalin ke '/var/www/html/.htaccess'."
+		status_nonaktif+=("Berhasil")
+	fi
+	echo "[*] Merestart layanan Apache2..."
+	sleep 3
+	systemctl restart apache2
+	if [[ $? -ne 0 ]]; then
+		echo "[-] Layanan 'Apache2' gagal direstart."
+		tekan_enter
+		main
+	else
+		echo "[+] Layanan 'Apache2' berhasil direstart "
+		status_nonaktif+=("Berhasil")
+	fi
+
+	if [[ "${#status_nonaktif[@]}" -eq 5 ]]; then
+		echo "[+] Bhha berhasil dinonaktifkan."
+		tekan_enter
+		main
+	else
+		echo "[-] Bhaa gagal dinonaktifkan."
 		tekan_enter
 		main
 	fi
@@ -356,6 +383,8 @@ function main(){
 		read -p "[#] Pilih menu: " pilih_menu
 		if [[ "${pilih_menu}" == "0" ]]; then
 			keluar
+		elif [[ "${pilih_menu}" == "1" ]]; then
+			aktifkan_bhaa
 		elif [[ "${pilih_menu}" == "2" ]]; then
 			menampilkan_user
 		elif [[ "${pilih_menu}" == "3" ]]; then
@@ -369,6 +398,8 @@ function main(){
 		elif [[ "${pilih_menu}" == "5" ]]; then
 			menampilkan_user
 			hapus_user
+		elif [[ "${pilih_menu}" == "6" ]]; then
+			nonaktifkan_bhaa
 		elif [[ "${pilih_menu}" == "5" ]]; then
 			tentang
 		else
