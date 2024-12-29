@@ -1,6 +1,6 @@
 #!/bin/bash
-# [menu_utama_bhaa]
-# Kelola Basic HTTP Authentication secara otomatis.
+# [bhaa]
+# Kelola Basic HTTP Authentication Apache2 secara otomatis.
 
 trap 'echo -e "\n[-] KeyboardInterrupt"; exit 1' SIGINT
 
