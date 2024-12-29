@@ -314,6 +314,19 @@ function nonaktifkan_bhaa(){
 		status_nonaktif+=("Berhasil")
 	fi
 
+	echo "[*] Menyalin file 'disable-apache2.conf' ke '/etc/apache2/apache2.conf'..."
+	sleep 3
+	cp disable-apache2.conf /etc/apache2/apache2.conf
+	if [[ $? -ne 0 ]]; then
+		echo "File 'disable-apache2.conf' gagal disalin ke '/etc/apache2/apache2.conf'."
+		tekan_enter
+		main
+	else
+		echo "[+] File 'disable-apache2.conf' berhasil disalin ke '/etc/apache2/apache2.conf'."
+		status_nonaktif+=("Berhasil")
+	fi
+
+
 	echo "[*] Menyalin file 'disable-htaccess' ke '/var/www/html/.htaccess'..."
 	sleep 3
 	cp disable-htaccess /var/www/html/.htaccess
@@ -337,7 +350,7 @@ function nonaktifkan_bhaa(){
 		status_nonaktif+=("Berhasil")
 	fi
 
-	if [[ "${#status_nonaktif[@]}" -eq 5 ]]; then
+	if [[ "${#status_nonaktif[@]}" -eq 6 ]]; then
 		echo "[+] Bhha berhasil dinonaktifkan."
 		tekan_enter
 		main
