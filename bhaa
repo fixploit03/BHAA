@@ -30,9 +30,9 @@ function aktifkan_bhaa(){
 	status_aktif=()
 
 	clear
-	echo "--------------------------------------"
-	echo "Bhaa - Aktifkan Bhaa                  "
-	echo "--------------------------------------"
+	echo "-------------------------------------------------------------------------"
+	echo "Bhaa - Aktifkan Bhaa                                                     "
+	echo "-------------------------------------------------------------------------"
 
 	echo "[*] Mengaktifkan modul 'auth_basic'..."
 	sleep 3
@@ -293,14 +293,16 @@ function hapus_user(){
 			continue
 		fi
 
-		if [[ ! "${daftar_user}" =~ "${user_d}" ]]; then
-			echo "[-] User ${user_d} tidak ditemukan dalam file '/etc/apache2/.htpasswd'."
-			continue
-		fi
+		grep -q "^${user_d}:" /etc/apache2/.htpasswd
+        	if [[ $? -ne 0 ]]; then
+            		echo "[-] User '${user_d}' tidak ditemukan di file '/etc/apache2/.htpasswd'."
+            		continue
+        	fi
+
 		echo "[*] Menghapus user '${user_d}'..."
 		sleep 3
 
-		sed -i "s/${user_d}//g" /etc/apache2/.htpasswd
+		sed -i "/^${user_d}:/d" /etc/apache2/.htpasswd
 
 		if [[ $? -ne 0 ]]; then
 			echo "[-] User '${user_d}' gagal dihapus."
@@ -309,7 +311,6 @@ function hapus_user(){
 			tekan_enter
 			main
 		fi
-
 	done
 }
 
