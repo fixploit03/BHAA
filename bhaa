@@ -29,6 +29,11 @@ function aktifkan_bhaa(){
 
 	status_aktif=()
 
+	clear
+	echo "--------------------------------------"
+	echo "Bhaa - Aktifkan Bhaa                  "
+	echo "--------------------------------------"
+
 	echo "[*] Mengaktifkan modul 'auth_basic'..."
 	sleep 3
 	sudo a2enmod auth_basic &> /dev/null
@@ -123,6 +128,19 @@ function aktifkan_bhaa(){
 
 # Fungsi untuk memasukkan username
 function masukkan_username(){
+
+	clear
+
+	if [[ "${pilih_menu}" == "3" ]]; then
+		echo "-------------------------------------------------------------------------"
+		echo "Bhaa - Buat User Baru                                                    "
+		echo "-------------------------------------------------------------------------"
+	elif [[ "${pilih_menu}" == "4" ]]; then
+		echo "-------------------------------------------------------------------------"
+		echo "Bhaa - Tambah User                                                       "
+		echo "-------------------------------------------------------------------------"
+	fi
+
 	while true; do
 		read -p "[#] Masukkan username (nama pengguna): " username
 
@@ -224,6 +242,19 @@ function buat_user(){
 
 # Fungsi untuk menampilkan user yang ada
 function menampilkan_user(){
+
+	clear
+
+	if [[ "${pilih_menu}" == "2" ]]; then
+		echo "-------------------------------------------------------------------------"
+		echo "Bhaa - Menampilkan User                                                  "
+		echo "-------------------------------------------------------------------------"
+	elif [[ "${pilih_menu}" == "5" ]]; then
+		echo "-------------------------------------------------------------------------"
+		echo "Bhaa - Hapus User                                                        "
+		echo "-------------------------------------------------------------------------"
+	fi
+
 	daftar_user=($(cat /etc/apache2/.htpasswd | cut -d ':' -f 1))
 	echo "[*] Menampilkan seluruh user yang ada di file '/etc/apache2/.htpasswd'..."
 	sleep 3
@@ -242,10 +273,10 @@ function menampilkan_user(){
 			echo "[+] ${u}"
 		done
 
-		if [[ "${pilih_menu}" == "1" ]]; then
+		if [[ "${pilih_menu}" == "2" ]]; then
 			tekan_enter
 			main
-		else
+		elif [[ "${pilih_menu}" == "5" ]]; then
 			echo ""
 		fi
 	fi
@@ -257,6 +288,11 @@ function hapus_user(){
 	while true; do
 		read -p "[#] Masukkan username yang akan dihapus: " user_d
 
+		if [[ -z "${user_d}" ]]; then
+			echo "[-] Username tidak boleh kosong."
+			continue
+		fi
+
 		if [[ ! "${daftar_user}" =~ "${user_d}" ]]; then
 			echo "[-] User ${user_d} tidak ditemukan dalam file '/etc/apache2/.htpasswd'."
 			continue
@@ -264,15 +300,16 @@ function hapus_user(){
 		echo "[*] Menghapus user '${user_d}'..."
 		sleep 3
 
-		sed -i "/${user_d}/d" /etc/apache2/.htpasswd
+		sed -i "s/${user_d}//g" /etc/apache2/.htpasswd
 
 		if [[ $? -ne 0 ]]; then
 			echo "[-] User '${user_d}' gagal dihapus."
+		else
+			echo "[+] User '${user_d}' berhasil dihapus."
+			tekan_enter
+			main
 		fi
 
-		echo "[+] User '${user_d}' berhasil dihapus."
-		tekan_enter
-		main
 	done
 }
 
@@ -299,7 +336,7 @@ function nonaktifkan_bhaa(){
 		tekan_enter
 		main
 	else
-		echo "[+] Layanan 'Apache2' berhasil direstart "
+		echo "[+] Layanan 'Apache2' berhasil direstart."
 		status_nonaktif+=("Berhasil")
 	fi
 	echo "[*] Menyalin file 'disable-000-default.conf' ke '/etc/apache2/sites-enabled/000-default.conf'..."
@@ -346,7 +383,7 @@ function nonaktifkan_bhaa(){
 		tekan_enter
 		main
 	else
-		echo "[+] Layanan 'Apache2' berhasil direstart "
+		echo "[+] Layanan 'Apache2' berhasil direstart."
 		status_nonaktif+=("Berhasil")
 	fi
 
@@ -363,14 +400,17 @@ function nonaktifkan_bhaa(){
 
 # Fungsi untuk menampilkan tentang program BHHA
 function tentang(){
-	echo ""
-	echo "Tentang BHHA"
-	echo ""
-	echo "BHHA adalah program Bash sederhana yang dirancang untuk membuat"
-	echo "dan mengelola Basic HTTP Authentication baik untuk melihat user"
-	echo ", membuat user baru, menambahkan user dan menghapus user."
-	echo ""
+	clear
+	echo "-------------------------------------------------------------------------"
+	echo "Bhaa - Tentang BHHA                                                      "
+	echo "-------------------------------------------------------------------------"
+	echo "BHHA adalah program Bash sederhana yang dirancang untuk membuat          "
+	echo "dan mengelola Basic HTTP Authentication Apache2 baik untuk               "
+	echo "melihat user, membuat user baru, menambahkan user dan menghapus          "
+	echo "user.                                                                    "
+	echo "-------------------------------------------------------------------------"
 	echo "Dibuat oleh Rofi (fixploit03)"
+	echo "-------------------------------------------------------------------------"
 	tekan_enter
 	main
 }
@@ -378,20 +418,20 @@ function tentang(){
 # Fungsi utama program (main)
 function main(){
 	clear
-	echo "----------------------------------------"
-	echo "BHAA - Basic HTTP Authentication Apache2"
-	echo "----------------------------------------"
-	echo "Menu BHAA:"
-	echo "----------------------------------------"
-	echo "[0] Keluar"
-	echo "[1] Aktifkan BHHA"
-	echo "[2] Lihat User"
-	echo "[3] Buat User Baru"
-	echo "[4] Tambah User"
-	echo "[5] Hapus User"
-	echo "[6] Nonaktifkan BHHA"
-	echo "[7] Tentang"
-	echo "----------------------------------------"
+	echo "-------------------------------------------------------------------------"
+	echo "BHAA - Basic HTTP Authentication Apache2                                 "
+	echo "-------------------------------------------------------------------------"
+	echo "Menu BHAA:                                                               "
+	echo "-------------------------------------------------------------------------"
+	echo "[0] Keluar                                                               "
+	echo "[1] Aktifkan BHHA                                                        "
+	echo "[2] Lihat User                                                           "
+	echo "[3] Buat User Baru                                                       "
+	echo "[4] Tambah User                                                          "
+	echo "[5] Hapus User                                                           "
+	echo "[6] Nonaktifkan BHHA                                                     "
+	echo "[7] Tentang                                                              "
+	echo "-------------------------------------------------------------------------"
 	while true; do
 		read -p "[#] Pilih menu: " pilih_menu
 		if [[ "${pilih_menu}" == "0" ]]; then
@@ -413,7 +453,7 @@ function main(){
 			hapus_user
 		elif [[ "${pilih_menu}" == "6" ]]; then
 			nonaktifkan_bhaa
-		elif [[ "${pilih_menu}" == "5" ]]; then
+		elif [[ "${pilih_menu}" == "7" ]]; then
 			tentang
 		else
 			echo "[-] Menu tidak tersedia. Silahkan pilih kembali."
