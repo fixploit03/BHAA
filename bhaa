@@ -106,17 +106,17 @@ function aktifkan_bhaa(){
 	fi
 
 
-	echo "[*] Merestart layanan Apache2..."
+	echo "[*] Merestart layanan 'Apache2'..."
 
 	sudo systemctl restart apache2
 
 	if [[ $? -ne 0 ]]; then
-	        echo "[-] Layanan Apache2 gagal direstart."
+	        echo "[-] Layanan 'Apache2' gagal direstart."
 		echo "-------------------------------------------------------------------------"
 	        tekan_enter
 		main
 	else
-		echo "[+] Layanan Apache2 berhasil direstart."
+		echo "[+] Layanan 'Apache2' berhasil direstart."
 		status_aktif+=("Berhasil")
 	fi
 
@@ -339,19 +339,19 @@ function nonaktifkan_bhaa(){
 	clear
 
 	echo "-------------------------------------------------------------------------"
-	echo "Bhaa - Nonaktifkan Bhaa                                                     "
+	echo "Bhaa - Nonaktifkan Bhaa                                                  "
 	echo "-------------------------------------------------------------------------"
 
-	echo "[*] Menonaktifkan layanan 'auth_basic'..."
+	echo "[*] Menonaktifkan modul 'auth_basic'..."
 	sleep 3
 	a2dismod auth_basic -f &> /dev/null
 	if [[ $? -ne 0 ]]; then
-		echo "[-] Layanan 'auth_basic' gagal dinonaktifkan."
+		echo "[-] Modul 'auth_basic' gagal dinonaktifkan."
 		echo "-------------------------------------------------------------------------"
 		tekan_enter
 		main
 	else
-		echo "[+] Layanan 'auth_basic' berhasil dinonaktifkan."
+		echo "[+] Modul 'auth_basic' berhasil dinonaktifkan."
 		status_nonaktif+=("Berhasil")
 	fi
 	echo "[*] Merestart layanan Apache2..."
@@ -405,7 +405,7 @@ function nonaktifkan_bhaa(){
 		echo "[+] File 'disable-htaccess' berhasil disalin ke '/var/www/html/.htaccess'."
 		status_nonaktif+=("Berhasil")
 	fi
-	echo "[*] Merestart layanan Apache2..."
+	echo "[*] Merestart layanan 'Apache2'..."
 	sleep 3
 	systemctl restart apache2
 	if [[ $? -ne 0 ]]; then
