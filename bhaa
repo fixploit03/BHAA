@@ -51,7 +51,7 @@ function aktifkan_bhaa(){
 	sleep 3
 	sudo systemctl restart apache2
 	if [[ $? -ne 0 ]]; then
-		echo "[-] Layanan 'Apacahe2' gagal direstart."
+		echo "[-] Layanan 'Apache2' gagal direstart."
 		echo "-------------------------------------------------------------------------"
 		tekan_enter
 		main
@@ -426,7 +426,7 @@ function nonaktifkan_bhaa(){
 	fi
 
 	if [[ "${#status_nonaktif[@]}" -eq 6 ]]; then
-		echo "[+] Bhha berhasil dinonaktifkan."
+		echo "[+] Bhaa berhasil dinonaktifkan."
 		echo "-------------------------------------------------------------------------"
 		tekan_enter
 		main
