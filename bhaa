@@ -254,6 +254,13 @@ function menampilkan_user(){
 		echo "-------------------------------------------------------------------------"
 	fi
 
+        if [[ ! -f /etc/apache2/.htpasswd ]]; then 
+                echo "[-] File '/etc/apache2/.htpasswd' tidak ditemukan."
+                echo "-------------------------------------------------------------------------"
+                tekan_enter
+                main
+        fi
+
 	daftar_user=($(cat /etc/apache2/.htpasswd | cut -d ':' -f 1))
 	echo "[*] Menampilkan seluruh user yang ada di file '/etc/apache2/.htpasswd'..."
 	sleep 3
