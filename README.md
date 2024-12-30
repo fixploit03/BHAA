@@ -1,6 +1,6 @@
 # Bhaa - Basic HTTP Authentication Apache2 
 
-`Bhaa` (Basic HTTP Authentication Apache2) adalah program Bash yang dirancang untuk mengelola Basic HTTP Authentication pada server Apache2. Program ini menyediakan antarmuka berbasis terminal untuk mengaktifkan, menonaktifkan, dan mengelola user pada file .htpasswd di Apache2.
+`Bhaa` (Basic HTTP Authentication Apache2) adalah program Bash yang dirancang untuk mengelola Basic HTTP Authentication pada server Apache2. Program ini menyediakan antarmuka berbasis terminal untuk mengaktifkan, menonaktifkan, dan mengelola user pada file `.htpasswd` di Apache2.
 
 ## Screenshot 
 
