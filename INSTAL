@@ -1,0 +1,14 @@
+Berikut ini adalah langkah-langkah untuk menginstal BHAA:
+
+[ HARUS MODE ROOT BOY ]
+
+1. apt-get update
+2. apt-get install apache2
+3. apt-get install apache2-utils
+4. apt-get install git 
+5. git clone https://github.com/fixploit03/BHAA
+6. cd BHAA
+7. chmod +x bhaa
+8. ./bhaa
+
+[ SELESAI ]
