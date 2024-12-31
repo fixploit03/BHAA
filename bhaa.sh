@@ -35,7 +35,6 @@ function aktifkan_bhaa(){
 	echo "-------------------------------------------------------------------------"
 
 	echo "[*] Mengaktifkan modul 'auth_basic'..."
-	sleep 3
 	sudo a2enmod auth_basic &> /dev/null
 	if [[ $? -ne 0 ]]; then
 		echo "[-] Modul 'auth_basic' gagal diaktifkan."
@@ -48,7 +47,6 @@ function aktifkan_bhaa(){
 	fi
 
 	echo "[*] Merestart layanan 'Apache2'..."
-	sleep 3
 	sudo systemctl restart apache2
 	if [[ $? -ne 0 ]]; then
 		echo "[-] Layanan 'Apache2' gagal direstart."
@@ -61,7 +59,6 @@ function aktifkan_bhaa(){
 	fi
 
 	echo "[*] Menyalin file '000-default.conf' ke '/etc/apache2/sites-enabled'..."
-	sleep 3
 
 	cp 000-default.conf /etc/apache2/sites-enabled/
 
@@ -76,7 +73,6 @@ function aktifkan_bhaa(){
 	fi
 
 	echo "[*] Menyalin file 'apache2.conf' ke '/etc/apache2'..."
-	sleep 3
 
 	sudo cp apache2.conf /etc/apache2/
 
@@ -91,7 +87,6 @@ function aktifkan_bhaa(){
 	fi
 
 	echo "[*] Menyalin file '.htaccess' ke '/var/www/html'..."
-	sleep 3
 
 	sudo cp .htaccess /var/www/html/
 
@@ -199,7 +194,6 @@ function pilih_jenis_enkripsi_password(){
 function tambah_user(){
 	echo "[*] Menambahkan user '${username}'..."
 	echo ""
-	sleep 3
 	htpasswd "${opsi}" /etc/apache2/.htpasswd "${username}"
 	if [[ $? -ne 0 ]]; then
 		echo ""
@@ -221,7 +215,6 @@ function tambah_user(){
 function buat_user(){
 	echo "[*] Membuat user baru '${username}'..."
 	echo ""
-	sleep 3
 	htpasswd -c "${opsi}" /etc/apache2/.htpasswd "${username}"
 
 	if [[ $? -ne 0 ]]; then
@@ -263,8 +256,7 @@ function menampilkan_user(){
 
 	daftar_user=($(cat /etc/apache2/.htpasswd | cut -d ':' -f 1))
 	echo "[*] Menampilkan seluruh user yang ada di file '/etc/apache2/.htpasswd'..."
-	sleep 3
-
+ 
 	if [[ "${#daftar_user[@]}" -eq 0 ]]; then
 		echo ""
 		echo "Tidak ada user yang ditemukan."
@@ -310,7 +302,6 @@ function hapus_user(){
 			read -p "[#] Apakah Anda yakin ingin menghapus user '${user_d}' [Y/n]: " konfirmasi
 			if [[ "${konfirmasi}" == "y" || "${konfirmasi}" == "Y" ]]; then
 				echo "[*] Menghapus user '${user_d}'..."
-				sleep 3
 
 				sed -i "/^${user_d}:/d" /etc/apache2/.htpasswd
 
@@ -350,7 +341,6 @@ function nonaktifkan_bhaa(){
 	echo "-------------------------------------------------------------------------"
 
 	echo "[*] Menonaktifkan modul 'auth_basic'..."
-	sleep 3
 	a2dismod auth_basic -f &> /dev/null
 	if [[ $? -ne 0 ]]; then
 		echo "[-] Modul 'auth_basic' gagal dinonaktifkan."
@@ -362,7 +352,7 @@ function nonaktifkan_bhaa(){
 		status_nonaktif+=("Berhasil")
 	fi
 	echo "[*] Merestart layanan Apache2..."
-	sleep 3
+
 	systemctl restart apache2
 	if [[ $? -ne 0 ]]; then
 		echo "[-] Layanan 'Apache2' gagal direstart."
@@ -374,7 +364,7 @@ function nonaktifkan_bhaa(){
 		status_nonaktif+=("Berhasil")
 	fi
 	echo "[*] Menyalin file 'disable-000-default.conf' ke '/etc/apache2/sites-enabled/000-default.conf'..."
-	sleep 3
+
 	cp disable-000-default.conf /etc/apache2/sites-enabled/000-default.conf
 	if [[ $? -ne 0 ]]; then
 		echo "File 'disable-000-default.conf' gagal disalin ke '/etc/apache2/sites-enabled/000-default.conf'."
@@ -387,7 +377,7 @@ function nonaktifkan_bhaa(){
 	fi
 
 	echo "[*] Menyalin file 'disable-apache2.conf' ke '/etc/apache2/apache2.conf'..."
-	sleep 3
+
 	cp disable-apache2.conf /etc/apache2/apache2.conf
 	if [[ $? -ne 0 ]]; then
 		echo "File 'disable-apache2.conf' gagal disalin ke '/etc/apache2/apache2.conf'."
@@ -401,7 +391,7 @@ function nonaktifkan_bhaa(){
 
 
 	echo "[*] Menyalin file 'disable-htaccess' ke '/var/www/html/.htaccess'..."
-	sleep 3
+
 	cp disable-htaccess /var/www/html/.htaccess
 	if [[ $? -ne 0 ]]; then
 		echo "[-] File 'disable-htaccess' gagal disalin ke '/var/www/html/.htaccess'."
@@ -413,7 +403,7 @@ function nonaktifkan_bhaa(){
 		status_nonaktif+=("Berhasil")
 	fi
 	echo "[*] Merestart layanan 'Apache2'..."
-	sleep 3
+
 	systemctl restart apache2
 	if [[ $? -ne 0 ]]; then
 		echo "[-] Layanan 'Apache2' gagal direstart."
