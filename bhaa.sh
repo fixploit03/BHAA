@@ -1,5 +1,5 @@
 #!/bin/bash
-# [bhaa]
+# [bhaa.sh]
 # Kelola Basic HTTP Authentication Apache2 secara otomatis.
 
 trap 'echo -e "\n[-] KeyboardInterrupt"; exit 1' SIGINT
@@ -11,7 +11,6 @@ function cek_root(){
 		exit 1
 	fi
 }
-
 
 # Fungsi tekan enter
 function tekan_enter(){
@@ -25,6 +24,7 @@ function keluar(){
 	exit 0
 }
 
+# Fungsi untuk mengaktifkan BHAA
 function aktifkan_bhaa(){
 
 	status_aktif=()
@@ -33,9 +33,10 @@ function aktifkan_bhaa(){
 	echo "-------------------------------------------------------------------------"
 	echo "Bhaa - Aktifkan Bhaa                                                     "
 	echo "-------------------------------------------------------------------------"
-
 	echo "[*] Mengaktifkan modul 'auth_basic'..."
+ 
 	sudo a2enmod auth_basic &> /dev/null
+ 
 	if [[ $? -ne 0 ]]; then
 		echo "[-] Modul 'auth_basic' gagal diaktifkan."
 		echo "-------------------------------------------------------------------------"
@@ -47,7 +48,9 @@ function aktifkan_bhaa(){
 	fi
 
 	echo "[*] Merestart layanan 'Apache2'..."
-	sudo systemctl restart apache2
+ 
+	sudo systemctl restart 
+ 
 	if [[ $? -ne 0 ]]; then
 		echo "[-] Layanan 'Apache2' gagal direstart."
 		echo "-------------------------------------------------------------------------"
@@ -146,7 +149,6 @@ function masukkan_username(){
 
 	while true; do
 		read -p "[#] Masukkan username (nama pengguna): " username
-
 		if [[ -z "${username}" ]]; then
 			echo "[-] Username tidak boleh kosong."
 			continue
@@ -194,7 +196,9 @@ function pilih_jenis_enkripsi_password(){
 function tambah_user(){
 	echo "[*] Menambahkan user '${username}'..."
 	echo ""
+ 
 	htpasswd "${opsi}" /etc/apache2/.htpasswd "${username}"
+ 
 	if [[ $? -ne 0 ]]; then
 		echo ""
 		echo "[-] User '${username}' gagal ditambahkan."
@@ -215,6 +219,7 @@ function tambah_user(){
 function buat_user(){
 	echo "[*] Membuat user baru '${username}'..."
 	echo ""
+ 
 	htpasswd -c "${opsi}" /etc/apache2/.htpasswd "${username}"
 
 	if [[ $? -ne 0 ]]; then
@@ -255,6 +260,7 @@ function menampilkan_user(){
         fi
 
 	daftar_user=($(cat /etc/apache2/.htpasswd | cut -d ':' -f 1))
+ 
 	echo "[*] Menampilkan seluruh user yang ada di file '/etc/apache2/.htpasswd'..."
  
 	if [[ "${#daftar_user[@]}" -eq 0 ]]; then
@@ -293,6 +299,7 @@ function hapus_user(){
 		fi
 
 		grep -q "^${user_d}:" /etc/apache2/.htpasswd
+  
         	if [[ $? -ne 0 ]]; then
             		echo "[-] User '${user_d}' tidak ditemukan di file '/etc/apache2/.htpasswd'."
             		continue
@@ -330,6 +337,7 @@ function hapus_user(){
 	done
 }
 
+# Fungsi untuk menonaktifkan BHAA
 function nonaktifkan_bhaa(){
 
 	status_nonaktif=()
@@ -339,9 +347,10 @@ function nonaktifkan_bhaa(){
 	echo "-------------------------------------------------------------------------"
 	echo "Bhaa - Nonaktifkan Bhaa                                                  "
 	echo "-------------------------------------------------------------------------"
-
 	echo "[*] Menonaktifkan modul 'auth_basic'..."
+ 
 	a2dismod auth_basic -f &> /dev/null
+ 
 	if [[ $? -ne 0 ]]; then
 		echo "[-] Modul 'auth_basic' gagal dinonaktifkan."
 		echo "-------------------------------------------------------------------------"
@@ -351,9 +360,11 @@ function nonaktifkan_bhaa(){
 		echo "[+] Modul 'auth_basic' berhasil dinonaktifkan."
 		status_nonaktif+=("Berhasil")
 	fi
+ 
 	echo "[*] Merestart layanan Apache2..."
 
 	systemctl restart apache2
+ 
 	if [[ $? -ne 0 ]]; then
 		echo "[-] Layanan 'Apache2' gagal direstart."
 		echo "-------------------------------------------------------------------------"
@@ -363,9 +374,11 @@ function nonaktifkan_bhaa(){
 		echo "[+] Layanan 'Apache2' berhasil direstart."
 		status_nonaktif+=("Berhasil")
 	fi
+ 
 	echo "[*] Menyalin file 'disable-000-default.conf' ke '/etc/apache2/sites-enabled/000-default.conf'..."
 
 	cp disable-000-default.conf /etc/apache2/sites-enabled/000-default.conf
+ 
 	if [[ $? -ne 0 ]]; then
 		echo "File 'disable-000-default.conf' gagal disalin ke '/etc/apache2/sites-enabled/000-default.conf'."
 		echo "-------------------------------------------------------------------------"
@@ -379,6 +392,7 @@ function nonaktifkan_bhaa(){
 	echo "[*] Menyalin file 'disable-apache2.conf' ke '/etc/apache2/apache2.conf'..."
 
 	cp disable-apache2.conf /etc/apache2/apache2.conf
+ 
 	if [[ $? -ne 0 ]]; then
 		echo "File 'disable-apache2.conf' gagal disalin ke '/etc/apache2/apache2.conf'."
 		echo "-------------------------------------------------------------------------"
@@ -393,6 +407,7 @@ function nonaktifkan_bhaa(){
 	echo "[*] Menyalin file 'disable-htaccess' ke '/var/www/html/.htaccess'..."
 
 	cp disable-htaccess /var/www/html/.htaccess
+ 
 	if [[ $? -ne 0 ]]; then
 		echo "[-] File 'disable-htaccess' gagal disalin ke '/var/www/html/.htaccess'."
 		echo "-------------------------------------------------------------------------"
@@ -402,9 +417,11 @@ function nonaktifkan_bhaa(){
 		echo "[+] File 'disable-htaccess' berhasil disalin ke '/var/www/html/.htaccess'."
 		status_nonaktif+=("Berhasil")
 	fi
+ 
 	echo "[*] Merestart layanan 'Apache2'..."
 
 	systemctl restart apache2
+ 
 	if [[ $? -ne 0 ]]; then
 		echo "[-] Layanan 'Apache2' gagal direstart."
 		echo "-------------------------------------------------------------------------"
